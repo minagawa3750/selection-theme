@@ -38,69 +38,69 @@
     </form>
 </div>
 
-@if ($tasks->isNotEmpty())
 
-<table class="table text-center bg-white mt-5" style="margin: auto; width: 68%;">
-    <thead>
-        <tr>
-            <th scope="col">タスク</th>
-            <th scope="col">投稿者</th>
-            <th scope="col">操作</th>
-        </tr>
-        
-    </thead>
-    <tbody>
-        @foreach ($tasks as $item)
+    @if ($tasks->isNotEmpty())
+    <table class="table text-center bg-white mt-5" style="margin: auto; width: 68%;">
+        <thead>
             <tr>
-                <td>
-                    {{ $item->name }}
-                </td>
-                <td>{{ $item->user->name }}</td>
-                <td>
-                    <div class="justify-content-center" style="display: flex;">
-                    @if ( $item->status == '0' )
-                        <form action="/tasks/{{ $item->id }}"
-                            method="post"
-                            
-                            role="menuitem" tabindex="-1">
-                            @csrf
-                            @method('PUT')
-
-                            <input type="hidden" name="status" value="{{$item->status}}">
-                            
-                            <button type="submit" class="btn btn-success">完了</button>
-                        </form>
-                    @else
-                        <button type="button" class="btn btn-secondary">終了</button>
-                    @endif
-                    @if ( $item->status == '0' )
-                        <a href="/tasks/{{ $item->id }}/edit/" class="btn btn-primary">編集</a>
-                    @else
-                        <button type="button" class="btn btn-primary" disabled="disabled">編集</a>
-                    @endif
-                        <form onsubmit="return deleteTask();"
-                            action="/tasks/{{ $item->id }}" method="post"
-                            class="inline-block text-gray-500 font-medium"
-                            role="menuitem" tabindex="-1">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="btn btn-danger">削除</button>
-                        </form>
-                    </div>
-                </td>
+                <th scope="col">タスク</th>
+                <th scope="col">投稿者</th>
+                <th scope="col">操作</th>
             </tr>
-        @endforeach
-    </tbody>
-</table>
-<script>
-    function deleteTask() {
-        if (confirm('本当に削除しますか？')) {
-            return true;
-        } else {
-            return false;
+            
+        </thead>
+        <tbody>
+            @foreach ($tasks as $task)
+                @if(Auth::user()->can('view', $task))
+                    <tr>
+                        <td>
+                            {{ $task->name }}
+                        </td>
+                        <td>{{ $task->user->name }}</td>
+                        <td>
+                            <div class="justify-content-center" style="display: flex;">
+                            @if ( $task->status == '0' )
+                                <form action="/tasks/{{ $task->id }}"
+                                    method="post"                                  
+                                    role="menuitem" tabindex="-1">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <input type="hidden" name="status" value="{{$task->status}}">
+                                    
+                                    <button type="submit" class="btn btn-success">完了</button>
+                                </form>
+                            @else
+                                <button type="button" class="btn btn-secondary">終了</button>
+                            @endif
+                            @if ( $task->status == '0' )
+                                <a href="/tasks/{{ $task->id }}/edit/" class="btn btn-primary">編集</a>
+                            @else
+                                <button type="button" class="btn btn-primary" disabled="disabled">編集</a>
+                            @endif
+                                <form onsubmit="return deleteTask();"
+                                    action="/tasks/{{ $task->id }}" method="post"
+                                    role="menuitem" tabindex="-1">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="btn btn-danger">削除</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+        </tbody>
+    </table>
+    <script>
+        function deleteTask() {
+            if (confirm('本当に削除しますか？')) {
+                return true;
+            } else {
+                return false;
+            }
         }
-    }
-</script>
-@endif
+    </script>
+    @endif
 @endsection

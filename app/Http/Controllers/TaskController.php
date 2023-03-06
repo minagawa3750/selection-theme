@@ -12,9 +12,17 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct()
+     {
+         // index, show を除外
+         $this->middleware('auth')->except(['index', 'show']);
+     }
+    
     public function index(Request $request)
     {
-    
+        $tasks = \Auth::user()->tasks;
+
         {
             $keyword = $request->input('keyword');
 
@@ -46,7 +54,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         $rules = [
             'task_name' => 'required|max:100',
         ];
@@ -133,8 +141,9 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-      Task::find($id)->delete();
+        $user_id = Auth::id();
+        Task::find($id)->delete();
   
-      return redirect('/tasks');
+        return redirect('/tasks');
     }
 }
