@@ -26,7 +26,18 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    /*protected $redirectTo = RouteServiceProvider::HOME;*/
+
+     protected function redirectTo() {
+        session()->flash('flash_message', 'ログインしました');
+        return '/tasks';
+    }
+
+    protected function loggedOut(\Illuminate\Http\Request $request)
+    {
+        session()->flash('flash_message', 'ログアウトしました');
+        return redirect('/tasks');
+    }
 
     /**
      * Create a new controller instance.

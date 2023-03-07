@@ -71,8 +71,17 @@
                     </ul>
                 </div>
             </div>
-        </nav>
-
+        </nav>    
+        @if (session('flash_message'))
+            <div class="flash_message bg-success text-center text-white">
+                {{ session('flash_message') }}
+            </div>
+        @endif
+        @if (session('alert_message'))
+            <div class="alert_message bg-danger text-center text-white">
+                {{ session('alert_message') }}
+            </div>
+        @endif
         <main class="py-4">
             @yield('content')
         </main>

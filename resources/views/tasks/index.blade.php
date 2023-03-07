@@ -50,47 +50,49 @@
             
         </thead>
         <tbody>
-            @foreach ($tasks as $task)
-                @if(Auth::user()->can('view', $task))
-                    <tr>
-                        <td>
-                            {{ $task->name }}
-                        </td>
-                        <td>{{ $task->user->name }}</td>
-                        <td>
-                            <div class="justify-content-center" style="display: flex;">
-                            @if ( $task->status == '0' )
-                                <form action="/tasks/{{ $task->id }}"
-                                    method="post"                                  
-                                    role="menuitem" tabindex="-1">
-                                    @csrf
-                                    @method('PUT')
+            @auth
+                @foreach ($tasks as $task)
+                    @if(Auth::user()->can('view', $task))
+                        <tr>
+                            <td>
+                                {{ $task->name }}
+                            </td>
+                            <td>{{ $task->user->name }}</td>
+                            <td>
+                                <div class="justify-content-center" style="display: flex;">
+                                @if ( $task->status == '0' )
+                                    <form action="/tasks/{{ $task->id }}"
+                                        method="post"                                  
+                                        role="menuitem" tabindex="-1">
+                                        @csrf
+                                        @method('PUT')
 
-                                    <input type="hidden" name="status" value="{{$task->status}}">
-                                    
-                                    <button type="submit" class="btn btn-success">完了</button>
-                                </form>
-                            @else
-                                <button type="button" class="btn btn-secondary">終了</button>
-                            @endif
-                            @if ( $task->status == '0' )
-                                <a href="/tasks/{{ $task->id }}/edit/" class="btn btn-primary">編集</a>
-                            @else
-                                <button type="button" class="btn btn-primary" disabled="disabled">編集</a>
-                            @endif
-                                <form onsubmit="return deleteTask();"
-                                    action="/tasks/{{ $task->id }}" method="post"
-                                    role="menuitem" tabindex="-1">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="btn btn-danger">削除</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
+                                        <input type="hidden" name="status" value="{{$task->status}}">
+                                        
+                                        <button type="submit" class="btn btn-success">完了</button>
+                                    </form>
+                                @else
+                                    <button type="button" class="btn btn-secondary">終了</button>
+                                @endif
+                                @if ( $task->status == '0' )
+                                    <a href="/tasks/{{ $task->id }}/edit/" class="btn btn-primary">編集</a>
+                                @else
+                                    <button type="button" class="btn btn-primary" disabled="disabled">編集</a>
+                                @endif
+                                    <form onsubmit="return deleteTask();"
+                                        action="/tasks/{{ $task->id }}" method="post"
+                                        role="menuitem" tabindex="-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="btn btn-danger">削除</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+            @endauth
         </tbody>
     </table>
     <script>
