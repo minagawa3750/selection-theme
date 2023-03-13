@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,9 +38,9 @@ class UserController extends Controller
             $user->avatar = $avatar;
         }
 
-        $user->save();
+            $user->save();
 
-        // flashメッセージつけてリダイレクト
-        return redirect('/tasks')->with('flash_message', 'ユーザー情報を更新しました');
+            // flashメッセージつけてリダイレクト
+            return redirect('/tasks')->with('flash_message', 'ユーザー情報を更新しました');
     }
 }

@@ -59,8 +59,8 @@ class TaskController extends Controller
         
         $rules = [
             'text' => 'required|max:100',
-            'start_date' =>  'required|after:yesterday', //start_dateが今日以降の日付かどうかチェック
-            'finish_date' => 'required|after:start_date',
+            'start_date' =>  'required|date|after:yesterday', //start_dateが今日以降の日付かどうかチェック
+            'finish_date' => 'required|date|after:yesterday',
         ];
     
         $messages = [
@@ -111,19 +111,19 @@ class TaskController extends Controller
     public function update(Request $request, string $id)
     {
         if ($request->status === null) {
-                $rules = [
-                    'text' => 'required|max:100',
-                    'start_date' =>  'required|date|after:yesterday', //start_dateが今日以降の日付かどうかチェック
-                    'finish_date' => 'required|date|after:start_date',
-                ];
-            
-                $messages = [
-                    'required' => '必須項目です', 'max' => '100文字以下にしてください。',
-                    'start_date.after' => '開始日には今日以降の日付を入力してください。',
-                    'finish_date.after' => '終了日には開始日以降の日付を入力してください。',
-                ];
-            
-                Validator::make($request->all(), $rules, $messages)->validate();
+            $rules = [
+                'text' => 'required|max:100',
+                'start_date' =>  'required|date|after:yesterday', //start_dateが今日以降の日付かどうかチェック
+                'finish_date' => 'required|date|after:yesterday',
+            ];
+        
+            $messages = [
+                'required' => '必須項目です', 'max' => '100文字以下にしてください。',
+                'start_date.after' => '開始日には今日以降の日付を入力してください。',
+                'finish_date.after' => '終了日には開始日以降の日付を入力してください。',
+            ];
+        
+            Validator::make($request->all(), $rules, $messages)->validate();
             
             
                 //該当のタスクを検索

@@ -113,6 +113,7 @@
             @endauth
         </tbody>
     </table>
+    <div class="d-flex justify-content-center mt-5">{!! $tasks->links() !!}</div>
     <script>
         function deleteTask() {
             if (confirm('本当に削除しますか？')) {
