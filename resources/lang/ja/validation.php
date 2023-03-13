@@ -145,6 +145,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'start_date' => '開始日',
+        'finish_date' => '終了日',
+        'yesterday' => '今日以降',
+    ],
 
 ];
