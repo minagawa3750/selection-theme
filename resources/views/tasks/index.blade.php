@@ -4,31 +4,27 @@
 <div class="container">
     <div class="row">
         <h2 class="text-center">今日は何する？</h2>
-        <form action="/tasks" method="post" class="mt-10">
-            @csrf
-
-            <div class="input-group mt-4">
-            <input type="text" class="form-control form-control-lg bg-white" placeholder="タスクを書く" name="task_name">
-            <button type="submit" class="btn btn-info text-white">
-                追加
-            </button>
+        @auth
+            <div class="text-center">
+                <img src="{{asset('storage/images/'.Auth::user()->avatar)}}" alt="{{ Auth::user()->name }}" style="widht: 400px; height: 200px; border-radius: 60%;">
+                <h5>{{ Auth::user()->name }}</h5>
             </div>
-            @error('task_name')
-                <div class="mt-3">
-                    <p class="text-danger">
-                        {{ $message }}
-                    </p>
-                </div>
-            @enderror
-        </form>
+        @endauth
+        <div class="text-center mt-3">
+        <button class="btn btn-info btn-lg">
+            <a href="{{ route('tasks.create') }}" class="text-white" style="text-decoration: none;">
+                    タスクを追加
+            </a>
+        </button>
     </div>
-
+        
+    </div>
     <form method="GET" action="{{ route('tasks.index') }}">
-        <div class="input-group mt-5" style="margin: auto;">
+        <div class="input-group mt-5 w-75" style="margin: auto;">
             <input type="text" placeholder="タスクを検索" name="keyword" value="{{$keyword}}" class="form-control form-control-lg bg-white">
-            <button type="submit" class="btn btn-primary">検索</button>
         </div>
         <div class="text-center mt-2">
+            <button type="submit" class="btn btn-primary">検索</button>
             <button class="btn btn-secondary">
                 <a href="{{ route('tasks.index') }}" class="text-white" style="text-decoration: none;">
                     検索をクリア
@@ -40,10 +36,13 @@
 
 
     @if ($tasks->isNotEmpty())
+    
     <table class="table text-center bg-white mt-5" style="margin: auto; width: 68%;">
         <thead>
             <tr>
                 <th scope="col">タスク</th>
+                <th scope="col">開始日</th>
+                <th scope="col">終了日</th>
                 <th scope="col">投稿者</th>
                 <th scope="col">操作</th>
             </tr>
@@ -53,10 +52,28 @@
             @auth
                 @foreach ($tasks as $task)
                     @if(Auth::user()->can('view', $task))
+                    
                         <tr>
-                            <td>
-                                {{ $task->name }}
-                            </td>
+                            @php
+                                $date = \Carbon\Carbon::today()->diffInDays(\Carbon\Carbon::parse($task->finish_date))
+                            @endphp
+                            <td>{{ $task->text }}</td>
+                            <td>{{ \Carbon\Carbon::parse($task->start_date)->format("Y/m/d") }}</td>
+                            @if( $task->status == 0 )
+                                @if(\Carbon\Carbon::today() <= \Carbon\Carbon::parse($task->finish_date))
+                                    @if ( $date == 3 || $date == 2 || $date == 1 )
+                                        <td class="bg-warning text-white">{{ \Carbon\Carbon::parse($task->finish_date)->format("Y/m/d") }}</td>
+                                    @elseif( $date == 0 )
+                                        <td class="text-white" style="background: #df7163;">{{ \Carbon\Carbon::parse($task->finish_date)->format("Y/m/d") }}</td>
+                                    @else
+                                        <td>{{ \Carbon\Carbon::parse($task->finish_date)->format("Y/m/d") }}</td>
+                                    @endif
+                                @else
+                                    <td class="bg-danger text-white">{{ \Carbon\Carbon::parse($task->finish_date)->format("Y/m/d") }}</td>
+                                @endif
+                            @else
+                                <td class="bg-success text-white">タスク終了！</td>
+                            @endif
                             <td>{{ $task->user->name }}</td>
                             <td>
                                 <div class="justify-content-center" style="display: flex;">
@@ -91,6 +108,7 @@
                             </td>
                         </tr>
                     @endif
+                    <p>{{ $task->count_task }}</p>
                 @endforeach
             @endauth
         </tbody>

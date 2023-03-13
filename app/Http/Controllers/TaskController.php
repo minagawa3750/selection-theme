@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class TaskController extends Controller
 {
@@ -32,7 +34,7 @@ class TaskController extends Controller
             //もしキーワードがあったら
             if(!empty($keyword))
             {
-                $query->orWhere('name','like','%'.$keyword.'%');
+                $query->orWhere('text','like','%'.$keyword.'%');
             }
 
             // 全件取得 +ページネーション
@@ -46,7 +48,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasks.new');
     }
 
     /**
@@ -56,7 +58,9 @@ class TaskController extends Controller
     {
         
         $rules = [
-            'task_name' => 'required|max:100',
+            'text' => 'required|max:100',
+            'start_date' => 'required',
+            'finish_date' => 'required',
         ];
         
         $messages = ['required' => '必須項目です', 'max' => '100文字以下にしてください。'];
@@ -65,10 +69,12 @@ class TaskController extends Controller
 
         //モデルをインスタンス化
         $task = new Task;
-
-        //モデル->カラム名 = 値 で、データを割り当てる
-        $task->name = $request->input('task_name');
+        
+        $task->text = $request->input('text');
         $task->user_id = Auth::id();
+        $task->start_date = $request->input('start_date');
+        $task->finish_date = $request->input('finish_date');
+        
         
         //データベースに保存
         $task->save();
@@ -102,7 +108,9 @@ class TaskController extends Controller
     {
         if ($request->status === null) {
                 $rules = [
-                    'task_name' => 'required|max:100',
+                    'text' => 'required|max:100',
+                    'start_date' => 'required',
+                    'finish_date' => 'required',
                 ];
             
                 $messages = ['required' => '必須項目です', 'max' => '100文字以下にしてください。'];
@@ -114,7 +122,9 @@ class TaskController extends Controller
                 $task = Task::find($id);
             
                 //モデル->カラム名 = 値 で、データを割り当てる
-                $task->name = $request->input('task_name');
+                $task->text = $request->input('text');
+                $task->start_date = $request->input('start_date');
+                $task->finish_date = $request->input('finish_date');
             
                 //データベースに保存
                 $task->save();
