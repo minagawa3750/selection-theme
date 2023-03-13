@@ -6,8 +6,8 @@
         <h2 class="text-center">今日は何する？</h2>
         @auth
             <div class="text-center">
-                <img src="{{asset('storage/images/'.Auth::user()->avatar)}}" alt="{{ Auth::user()->name }}" style="widht: 400px; height: 200px; border-radius: 60%;">
-                <h5>{{ Auth::user()->name }}</h5>
+                <img src="{{asset('storage/images/'.Auth::user()->avatar)}}" alt="{{ Auth::user()->name }}" style="width: 200px; height: 200px; border-radius: 50%;">
+                <h5 class="mt-3">{{ Auth::user()->name }}</h5>
             </div>
         @endauth
         <div class="text-center mt-3">

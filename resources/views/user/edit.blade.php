@@ -4,9 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <div class="text-center mb-5">
+                <img src="{{asset('storage/images/'.Auth::user()->avatar)}}" alt="{{ Auth::user()->name }}" style="width: 200px; height: 200px; border-radius: 50%;">
+                <h5 class="mt-3">プロフィール画像</h5>
+            </div>
             <div class="card">
                 <div class="card-header">プロフィール更新</div>
-
                 <div class="card-body">
                     <form action="{{route('user.update')}}" method="post" enctype="multipart/form-data">
                         @csrf
@@ -52,6 +55,29 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
+
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
